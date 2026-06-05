@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "title": "Mrs",
+      "email": "Bridget63@hotmail.com",
+      "customerfullname": "Duane Toy",
+      "password": "8Hd0l1HReo9AzI7",
+      "birthDay": "6",
+      "birthMonth": "December",
+      "birthYear": "1981",
+      "firstName": "Dexter",
+      "lastName": "Price",
+      "company": "Fay - Dach",
+      "address": "4041 VonRueden Curve",
+      "address2": "13781 Amelie Knoll",
+      "state": "Virginia",
+      "city": "Miaport",
+      "zipcode": "43655-9273",
+      "mobileNumber": "511-528-6211"
+    }
+  ]
+}

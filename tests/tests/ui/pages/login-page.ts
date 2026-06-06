@@ -16,6 +16,7 @@ class LoginPage {
 
 
     constructor(page: Page){
+        this.page = page;
         this.loginForm = page.locator(`//div[@class="login-form"]`);
         this.loginEmail = page.locator(`//input[@data-qa="login-email"]`);
         this.loginPassword = page.locator(`//input[@data-qa="login-password"]`);

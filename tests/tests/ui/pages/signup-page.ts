@@ -1,5 +1,4 @@
 import { type Page, type Locator , expect } from '@playwright/test'; 
-import { UserData } from '../../../interfaces/user';
 
 class SignUpPage {
     readonly page: Page;
@@ -178,6 +177,7 @@ class SignUpPage {
       } 
       
       await this.password.fill(password);
+      await this.birthDay.waitFor({ state: 'visible' });
       await this.birthDay.selectOption(birthDay);
       await this.birthMonth.selectOption(birthMonth);
       await this.birthYear.selectOption(birthYear);
@@ -193,7 +193,6 @@ class SignUpPage {
       await this.company.fill(company);
       await this.address.fill(address);
       await this.address2.fill(address2);
-      //await this.country.selectOption('Germany');
       await this.state.fill(state);
       await this.city.fill(city);
       await this.zipcode.fill(zipcode);
@@ -201,38 +200,6 @@ class SignUpPage {
       await this.clickCreateAccount();
   }
 
-      async fillAndSubmitSignUpForm1(user: UserData) {
-      if (user.title == 'Mr') {
-        await this.titleMr.check();
-      };
-      if (user.title == 'Mrs') {
-        await this.titleMrs.check();
-      } 
-      
-      await this.password.fill(user.password);
-      await this.birthDay.selectOption(user.birthDay);
-      await this.birthMonth.selectOption(user.birthMonth);
-      await this.birthYear.selectOption(user.birthYear);
-      if (user.news) {
-        await this.newsletterCheckbox.check();
-      }
-      if (user.offers) {
-        await this.specialOffersCheckbox.check();
-      }
-
-      await this.firstName.fill(user.firstName);
-      await this.lastName.fill(user.lastName);
-      await this.company.fill(user.company);
-      await this.address.fill(user.address);
-      await this.address2.fill(user.address2);
-      //await this.country.selectOption('Germany');
-      await this.state.fill(user.state);
-      await this.city.fill(user.city);
-      await this.zipcode.fill(user.zipcode);
-      await this.mobileNumber.fill(user.mobileNumber);
-      await this.page.waitForTimeout(15000);
-      await this.clickCreateAccount();
-  }
 }
 
 export default SignUpPage;

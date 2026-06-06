@@ -28,13 +28,13 @@ class LoginPage {
         this.signUpButton = page.locator(`//button[@data-qa="signup-button"]`);
         this.signUpErrorMessage = page.locator(`//form[@action="/signup"]/p`);
     }
-
-    async isLoginFormVisible(){
-        return await this.loginForm.isVisible();
-    }
     
     async fillLoginEmail(email: string){
         await this.loginEmail.fill(email);
+    }
+    async isLoginFormVisible(){
+        await this.loginForm.waitFor({ state: 'visible', timeout: 5000 });
+        return await this.loginForm.isVisible();
     }
 
     async fillLoginPassword(password: string){
@@ -83,6 +83,15 @@ class LoginPage {
         const text = await this.signUpErrorMessage.textContent();
         return text?.trim() || '';
     }
+
+    async getSignUpEmailValidation(): Promise<{ isValid: boolean, validationMessage: string }> {
+    return await this.signUpEmail.evaluate(
+        (el: HTMLInputElement) => ({
+            isValid: el.validity.valid,
+            validationMessage: el.validationMessage
+        })
+    );
+}
 }
 
 export default LoginPage;

@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import { faker } from '@faker-js/faker/locale/en';
-import { title } from 'process';
 
 type User = {
   //id: number;

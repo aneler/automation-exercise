@@ -9,7 +9,7 @@ import CookiePopup from '../pages/cookie-popup';
 import AccountMessagePage from '../pages/account-message-page';
 import { AccountMessages, LoginPageMsg, SignUpPageMsg } from '../../../constants/test-strings';
 import { urls } from '../../../constants/urls';
-import { deleteUserAndVerify } from '../../../utils/account-utils';
+import { deleteUserAndVerify, loginAndDeleteUser } from '../../../utils/account-utils';
 
 import { generateUserData, loadUserData, generateSingleUser } from '../../../utils/generateTestData';
 import { UserData } from '../../../interfaces/user';
@@ -22,9 +22,6 @@ let cookiePopup: CookiePopup;
 let accountMessage: AccountMessagePage;
 
 let newUser: UserData;
-let negativeLoginCases: any[] = [];
-
-//let browser: Browser;
 
 test.describe('Login user', () => {
 
@@ -33,11 +30,9 @@ test.describe('Login user', () => {
         const userData = await loadUserData();
         newUser = userData.users[0];
 
-        //browser = await chromium.launch();
-
     });
 
-    test.beforeEach(async ({ context, page }) => {
+    test.beforeEach(async ({ page }) => {
       loginPage = new LoginPage(page);
       signUpPage = new SignUpPage(page);
       cookiePopup = new CookiePopup(page);
@@ -45,12 +40,13 @@ test.describe('Login user', () => {
       mainPage = new MainPage(page);
       header = new Header(page);
       await page.goto(urls.base);
-    });
 
-    test(`sign up new user and login with correct email and password`, async ( {page} ) => {
         if (await cookiePopup.isCookieDialogVisible()){
             await cookiePopup.clickConsent();
         }
+    });
+
+    test(`sign up new user and login with correct email and password`, async ( {page} ) => {
         await header.clickLogin();
         await loginPage.fillAndSubmitSignUpForm(newUser.customerfullname, newUser.email);
 
@@ -79,9 +75,6 @@ test.describe('Login user', () => {
     });
     
     test(`login with existing login and password using header`, async ( {} ) => {
-        if (await cookiePopup.isCookieDialogVisible()){
-            await cookiePopup.clickConsent();
-        }
         await header.clickLogin();
         await loginPage.fillLoginEmail(newUser.email);
         await loginPage.fillLoginPassword(newUser.password);
@@ -91,9 +84,6 @@ test.describe('Login user', () => {
     })
 
     test(`logout from header`, async ( { page } ) => {
-        if (await cookiePopup.isCookieDialogVisible()){
-            await cookiePopup.clickConsent();
-        }
         await header.clickLogin();
         await loginPage.fillSignUpName(newUser.customerfullname);
         await loginPage.fillSignUpEmail(newUser.email);
@@ -130,9 +120,6 @@ test.describe('Login user', () => {
     
     for (const testCase of negativeLoginCases) {
         test(`should show error for ${testCase.description}`, async ({ page }) => {
-            if (await cookiePopup.isCookieDialogVisible()){
-                        await cookiePopup.clickConsent();
-            }
             await header.clickLogin();
             await loginPage.fillLoginEmail(testCase.email());
             await loginPage.fillLoginPassword(testCase.password);
@@ -142,9 +129,8 @@ test.describe('Login user', () => {
         });
     }
 
-   
-    test.afterAll(async () => {
-      //await browser.close();
+    test.afterAll(async ({ browser }) => {
+        await loginAndDeleteUser(browser, newUser);
     });
 
 })

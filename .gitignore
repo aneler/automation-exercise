@@ -2,3 +2,7 @@ node_modules/
 test-results/
 playwright-report/
 tests/data/user-data.json
+allure-results/
+allure-report/
+allure.sh
+removeAllureReport.sh

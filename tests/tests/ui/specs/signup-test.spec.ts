@@ -1,4 +1,3 @@
-import { chromium, Browser } from 'playwright';
 import { test, expect } from '@playwright/test';
 
 import Header from '../pages/header';
@@ -11,7 +10,7 @@ import { AccountMessages, LoginPageMsg, SignUpPageMsg } from '../../../constants
 import { urls } from '../../../constants/urls';
 import { deleteUserAndVerify } from '../../../utils/account-utils';
 
-import { generateUserData, loadUserData, generateSingleUser } from '../../../utils/generateTestData';
+import { generateUserData, loadUserData } from '../../../utils/generateTestData';
 import { UserData } from '../../../interfaces/user';
 
 let header: Header;
@@ -23,20 +22,15 @@ let accountMessage: AccountMessagePage;
 
 let newUser: UserData;
 
-//let browser: Browser;
-
 test.describe('New user registration', () => {
 
     test.beforeAll(async () => {
         await generateUserData(1);
         const userData = await loadUserData();
         newUser = userData.users[0];
-
-        //browser = await chromium.launch();
-
     });
 
-    test.beforeEach(async ({ context, page }) => {
+    test.beforeEach(async ({ page }) => {
       loginPage = new LoginPage(page);
       signUpPage = new SignUpPage(page);
       cookiePopup = new CookiePopup(page);
@@ -53,7 +47,7 @@ test.describe('New user registration', () => {
         await header.clickLogin();
         expect(await loginPage.getSignUpFormHeader()).toBe(LoginPageMsg.SIGNUP_FORM_HEADER);
         
-        await loginPage.fillAndSubmitLoginForm(newUser.customerfullname, newUser.email);
+        await loginPage.fillAndSubmitSignUpForm(newUser.customerfullname, newUser.email);
         
         expect(await signUpPage.getFormHeader()).toBe(SignUpPageMsg.ACCOUNT_INFORMATION_HEADER);
 
@@ -85,11 +79,11 @@ test.describe('New user registration', () => {
         await header.clickLogin();
         expect(await loginPage.getSignUpFormHeader()).toBe(LoginPageMsg.SIGNUP_FORM_HEADER);
         
-        await loginPage.fillAndSubmitLoginForm(newUser.customerfullname, newUser.email);
+        await loginPage.fillAndSubmitSignUpForm(newUser.customerfullname, newUser.email);
 
         expect(await signUpPage.getFormHeader()).toBe(SignUpPageMsg.ACCOUNT_INFORMATION_HEADER);
 
-        await signUpPage.fillAndSubmitSignUpForm(newUser.password, newUser.birthDay, 
+        await signUpPage.fillAndSubmitSignUpForm('', newUser.password, newUser.birthDay, 
                                         newUser.birthMonth, newUser.birthYear, 
                                         newUser.firstName, newUser.lastName, 
                                         '', newUser.address, 
@@ -110,8 +104,16 @@ test.describe('New user registration', () => {
         expect(await mainPage.isSliderVisible()).toBeTruthy();  
     });
 
-    test('should not register with invalid email format', async () => { 
-
+    test('should not register with invalid email format', async ({ page }) => {
+        await header.clickLogin();
+        await loginPage.fillSignUpEmail('invalid-email');
+        await loginPage.clickSignUpButton();
+        
+        const { isValid, validationMessage } = await loginPage.getSignUpEmailValidation();
+        
+        expect(isValid).toBeFalsy();
+        expect(validationMessage).not.toBe('');
+        expect(page.url()).toContain('/login');
     });
 
     test(`register a new user with existing email`, async ({ page} ) => {
@@ -120,7 +122,7 @@ test.describe('New user registration', () => {
         await header.clickLogin();
         expect(await loginPage.getSignUpFormHeader()).toBe(LoginPageMsg.SIGNUP_FORM_HEADER);
         
-        await loginPage.fillAndSubmitLoginForm(newUser.customerfullname, newUser.email);
+        await loginPage.fillAndSubmitSignUpForm(newUser.customerfullname, newUser.email);
 
         expect(await signUpPage.getFormHeader()).toBe(SignUpPageMsg.ACCOUNT_INFORMATION_HEADER);
 
@@ -138,7 +140,7 @@ test.describe('New user registration', () => {
         
         await header.clickLogin();
 
-        await loginPage.fillAndSubmitLoginForm(newUser.customerfullname, newUser.email);
+        await loginPage.fillAndSubmitSignUpForm(newUser.customerfullname, newUser.email);
 
         expect(await loginPage.getSignUpErrorMessage()).toBe(LoginPageMsg.SIGNUP_ERROR_MSG);
 
@@ -149,10 +151,6 @@ test.describe('New user registration', () => {
         await deleteUserAndVerify(header, accountMessage);
 
         expect(page.url()).toBe(urls.base);
-    });
-   
-    test.afterAll(async () => {
-      //await browser.close();
     });
 
 })

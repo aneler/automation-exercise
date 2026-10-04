@@ -4,7 +4,6 @@ import AccountMessagePage from '../tests/ui/pages/account-message-page';
 import LoginPage from '../tests/ui/pages/login-page';
 import CookiePopup from '../tests/ui/pages/cookie-popup';
 import { AccountMessages } from '../constants/test-strings';
-import { urls } from '../constants/urls';
 import { UserData } from '../interfaces/user';
 
 export async function deleteUserAndVerify(header: Header, accountMessage: AccountMessagePage) {
@@ -20,7 +19,7 @@ export async function loginAndDeleteUser(browser: Browser, user: UserData) {
     const cookiePopup = new CookiePopup(page);
     const accountMessage = new AccountMessagePage(page);
 
-    await page.goto(urls.base);
+    await page.goto('/');
 
     if (await cookiePopup.isCookieDialogVisible()) {
         await cookiePopup.clickConsent();

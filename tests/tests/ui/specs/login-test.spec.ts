@@ -8,7 +8,6 @@ import MainPage from '../pages/main-page';
 import CookiePopup from '../pages/cookie-popup';
 import AccountMessagePage from '../pages/account-message-page';
 import { AccountMessages, LoginPageMsg, SignUpPageMsg } from '../../../constants/test-strings';
-import { urls } from '../../../constants/urls';
 import { deleteUserAndVerify, loginAndDeleteUser } from '../../../utils/account-utils';
 
 import { generateUserData, loadUserData, generateSingleUser } from '../../../utils/generateTestData';
@@ -39,7 +38,7 @@ test.describe('Login user', () => {
       accountMessage = new AccountMessagePage(page); 
       mainPage = new MainPage(page);
       header = new Header(page);
-      await page.goto(urls.base);
+      await page.goto('/');
 
         if (await cookiePopup.isCookieDialogVisible()){
             await cookiePopup.clickConsent();
@@ -61,7 +60,7 @@ test.describe('Login user', () => {
         await accountMessage.clickContinueButton();
 
         await header.clickLogout();
-        expect(await page.url()).toBe(`https://automationexercise.com/login`);
+        await expect(page).toHaveURL('/login');
 
         await loginPage.fillLoginEmail(newUser.email);
         await loginPage.fillLoginPassword(newUser.password);
@@ -70,7 +69,7 @@ test.describe('Login user', () => {
         expect(await header.isDeleteUserLinkVisible()).toBeTruthy();
         expect(await header.getName()).toBe(newUser.customerfullname);
 
-        expect(page.url()).toBe(urls.base);
+        await expect(page).toHaveURL('/');
         expect(await mainPage.isSliderVisible()).toBeTruthy();     
     });
     
@@ -100,7 +99,7 @@ test.describe('Login user', () => {
         await accountMessage.clickContinueButton();
 
         await header.clickLogout();
-        expect(await page.url()).toBe(`https://automationexercise.com/login`);
+        await expect(page).toHaveURL('/login');
         expect(await loginPage.isLoginFormVisible()).toBeTruthy();
     })
         

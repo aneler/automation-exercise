@@ -7,7 +7,6 @@ import MainPage from '../pages/main-page';
 import CookiePopup from '../pages/cookie-popup';
 import AccountMessagePage from '../pages/account-message-page';
 import { AccountMessages, LoginPageMsg, SignUpPageMsg } from '../../../constants/test-strings';
-import { urls } from '../../../constants/urls';
 import { deleteUserAndVerify } from '../../../utils/account-utils';
 
 import { generateUserData, loadUserData } from '../../../utils/generateTestData';
@@ -37,7 +36,7 @@ test.describe('New user registration', () => {
       accountMessage = new AccountMessagePage(page); 
       mainPage = new MainPage(page);
       header = new Header(page);
-      await page.goto(urls.base);
+      await page.goto('/');
       await cookiePopup.acceptCookieIfVisible();
     });
 
@@ -69,7 +68,7 @@ test.describe('New user registration', () => {
 
         await deleteUserAndVerify(header, accountMessage);
 
-        expect(page.url()).toBe(urls.base);
+        await expect(page).toHaveURL('/');
         expect(await mainPage.isSliderVisible()).toBeTruthy();     
     });
 
@@ -100,7 +99,7 @@ test.describe('New user registration', () => {
 
         await deleteUserAndVerify(header, accountMessage);
 
-        expect(page.url()).toBe(urls.base);
+        await expect(page).toHaveURL('/');
         expect(await mainPage.isSliderVisible()).toBeTruthy();  
     });
 
@@ -113,7 +112,7 @@ test.describe('New user registration', () => {
         
         expect(isValid).toBeFalsy();
         expect(validationMessage).not.toBe('');
-        expect(page.url()).toContain('/login');
+        await expect(page).toHaveURL('/login');
     });
 
     test(`register a new user with existing email`, async ({ page} ) => {
@@ -150,7 +149,7 @@ test.describe('New user registration', () => {
 
         await deleteUserAndVerify(header, accountMessage);
 
-        expect(page.url()).toBe(urls.base);
+        await expect(page).toHaveURL('/');
     });
 
 })

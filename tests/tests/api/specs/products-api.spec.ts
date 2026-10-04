@@ -1,22 +1,10 @@
-import { test, expect, request, APIRequestContext } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { getProductsList } from '../requests/api-requests';
-
-let apiContext: APIRequestContext;
 
 test.describe('Products API', () => {
 
-    test.beforeAll(async () => {
-        apiContext = await request.newContext({
-            baseURL: 'https://automationexercise.com',
-        });
-    });
-
-    test.afterAll(async () => {
-        await apiContext.dispose();
-    });
-
-    test('GET productsList should return 200 and list of products', async () => {
-        const response = await getProductsList(apiContext);
+    test('GET productsList should return 200 and list of products', async ({request}) => {
+        const response = await getProductsList(request);
 
         expect(response.status()).toBe(200);
 
@@ -27,8 +15,8 @@ test.describe('Products API', () => {
         expect(body.products.length).toBeGreaterThan(0);
     });
 
-    test('POST productsList should return 405', async () => {
-        const response = await apiContext.post('/api/productsList');
+    test('POST productsList should return 405', async ({request}) => {
+        const response = await request.post('/api/productsList');
         console.log(await response.text());
 
         expect(response.status()).toBe(200);

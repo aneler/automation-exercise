@@ -6,6 +6,7 @@ export default defineConfig({
   retries: 0,
   globalSetup: require.resolve('./tests/setup/global-setup.ts'),
   use: {
+    baseURL: 'https://automationexercise.com',
     headless: true,
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,

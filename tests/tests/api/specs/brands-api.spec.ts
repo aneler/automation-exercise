@@ -1,22 +1,10 @@
-import { test, expect, request, APIRequestContext } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { getBrandsList } from '../requests/api-requests';
-
-let apiContext: APIRequestContext;
 
 test.describe('Brands API', () => {
 
-    test.beforeAll(async () => {
-        apiContext = await request.newContext({
-            baseURL: 'https://automationexercise.com',
-        });
-    });
-
-    test.afterAll(async () => {
-        await apiContext.dispose();
-    });
-
-    test('GET brandsList should return 200 and list of brands', async () => {
-        const response = await getBrandsList(apiContext);
+    test('GET brandsList should return 200 and list of brands', async ({request}) => {
+        const response = await getBrandsList(request);
 
         await test.step('verify HTTP status', async () => {
             expect(response.status()).toBe(200);
@@ -39,8 +27,8 @@ test.describe('Brands API', () => {
         });
     });
 
-    test('PUT brandsList should return 405', async () => {
-        const response = await apiContext.put('/api/brandsList');
+    test('PUT brandsList should return 405', async ({request}) => {
+        const response = await request.put('/api/brandsList');
         console.log(await response.text());
     
         expect(response.status()).toBe(200);

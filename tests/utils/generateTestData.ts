@@ -15,6 +15,7 @@ type User = {
   company: string; 
   address: string;
   address2: string;
+  country: string;
   state: string;
   city: string;
   zipcode: string;
@@ -22,6 +23,7 @@ type User = {
 };
 
 const titles = ['Mr', 'Mrs'];
+const countries = ['India', 'United States', 'Canada', 'Australia', 'Israel', 'New Zealand', 'Singapore'];
 
 
 export async function generateUserData(amount: number){
@@ -29,6 +31,7 @@ export async function generateUserData(amount: number){
     const day = Math.floor(Math.random() * 30) + 1;
     const year = Math.floor(Math.random() * (1990 - 1980 + 1)) + 1980;   
     const title = titles[Math.floor(Math.random() * titles.length)];
+    const country = countries[Math.floor(Math.random() * countries.length)];
 
     for (let i = 0; i < amount; i++) {
         const user = {
@@ -44,6 +47,7 @@ export async function generateUserData(amount: number){
             company: faker.company.name(),
             address: faker.location.streetAddress(),
             address2: faker.location.streetAddress(),
+            country: country,
             state: faker.location.state(),
             city: faker.location.city(),
             zipcode: faker.location.zipCode(),
@@ -63,6 +67,7 @@ export function generateSingleUser(): User {
   const day = Math.floor(Math.random() * 30) + 1;
   const year = Math.floor(Math.random() * (1990 - 1980 + 1)) + 1980;
   const title = titles[Math.floor(Math.random() * titles.length)];
+  const country = countries[Math.floor(Math.random() * countries.length)];
 
   return {
     title: title,
@@ -77,6 +82,7 @@ export function generateSingleUser(): User {
     company: faker.company.name(),
     address: faker.location.streetAddress(),
     address2: faker.location.streetAddress(),
+    country: country,
     state: faker.location.state(),
     city: faker.location.city(),
     zipcode: faker.location.zipCode(),

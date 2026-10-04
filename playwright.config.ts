@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: './tests',
   timeout: 30000,
   retries: 0,
+  globalSetup: require.resolve('./tests/setup/global-setup.ts'),
   use: {
     headless: true,
     viewport: { width: 1280, height: 720 },

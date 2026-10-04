@@ -6,3 +6,4 @@ allure-results/
 allure-report/
 allure.sh
 removeAllureReport.sh
+tests/data/global-user.json

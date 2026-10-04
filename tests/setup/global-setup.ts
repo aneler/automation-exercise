@@ -1,12 +1,12 @@
-import { request, expect } from '@playwright/test';
+import { request, expect, FullConfig } from '@playwright/test';
 import { generateSingleUser } from '../utils/generateTestData';
 import * as fs from 'fs';
 
 
-async function globalSetup() {
+async function globalSetup(config: FullConfig) {
     
     const apiContext = await request.newContext({
-        baseURL: 'https://automationexercise.com',
+        baseURL: config.projects[0].use.baseURL,
     });
     
     const user = generateSingleUser();

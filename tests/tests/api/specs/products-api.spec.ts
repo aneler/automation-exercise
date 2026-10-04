@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { getProductsList } from '../requests/api-requests';
+import { getProductsList, postProductsList } from '../requests/api-requests';
 
 test.describe('Products API', () => {
 
@@ -16,7 +16,7 @@ test.describe('Products API', () => {
     });
 
     test('POST productsList should return 405', async ({request}) => {
-        const response = await request.post('/api/productsList');
+        const response = await postProductsList(request);
         console.log(await response.text());
 
         expect(response.status()).toBe(200);
